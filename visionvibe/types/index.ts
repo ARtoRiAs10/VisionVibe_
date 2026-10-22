@@ -3,6 +3,11 @@ export interface VisionVibeControls {
   subTheme: string;
   budget: string;
   prompt: string;
+  /** Optional extras (added for accuracy + control) */
+  roomType?: string;
+  lighting?: string;
+  aspectRatio?: string;
+  seed?: number;
 }
 
 export interface ImageFile {
@@ -21,6 +26,12 @@ export interface DesignResult {
   budget: string;
   prompt: string;
   isPublic?: boolean;
+  isFavorite?: boolean;
+  roomType?: string;
+  lighting?: string;
+  aspectRatio?: string;
+  provider?: string;
+  model?: string;
   createdAt?: Date;
 }
 
@@ -34,8 +45,27 @@ export interface UserProfile {
   updatedAt: Date;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
+}
+
+export interface GenerationResult {
+  imageUrl: string;
+  description: string;
+  prompt: string;
+  provider: string;
+  model: string;
+  usedReference: boolean;
+  descriptionProvider: string;
+  analysis?: {
+    roomType: string;
+    description: string;
+    light: string;
+    palette: string[];
+    features: string[];
+  } | null;
+  designId?: number | null;
+  saved: boolean;
 }

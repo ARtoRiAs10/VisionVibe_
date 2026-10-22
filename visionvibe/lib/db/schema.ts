@@ -22,7 +22,15 @@ export const designs = pgTable('designs', {
   subTheme: varchar('sub_theme', { length: 100 }).notNull(),
   budget: varchar('budget', { length: 50 }).notNull(),
   prompt: text('prompt'),
+  /** Full art-directed prompt that was actually sent to the model */
+  generatedPrompt: text('generated_prompt'),
+  roomType: varchar('room_type', { length: 100 }),
+  lighting: varchar('lighting', { length: 100 }),
+  aspectRatio: varchar('aspect_ratio', { length: 20 }),
+  provider: varchar('provider', { length: 60 }),
+  model: varchar('model', { length: 120 }),
   isPublic: boolean('is_public').default(false).notNull(),
+  isFavorite: boolean('is_favorite').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

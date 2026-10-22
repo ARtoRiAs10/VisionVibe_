@@ -101,3 +101,14 @@ export const RetryIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+
+export const Sparkles = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    className="w-4 h-4"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    {...props}
+  >
+    <path d="M12 2l1.9 4.6L18.5 8l-4.6 1.9L12 14.5l-1.9-4.6L5.5 8l4.6-1.4L12 2zM19 13l.95 2.3L22 16l-2.05.85L19 19l-.95-2.15L16 16l2.05-.7L19 13zM5 14l.8 1.9L7.7 16.6l-1.9.8L5 19.3l-.8-1.9-1.9-.8 1.9-.7L5 14z" />
+  </svg>
+);

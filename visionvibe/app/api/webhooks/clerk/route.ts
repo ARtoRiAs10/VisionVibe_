@@ -1,9 +1,11 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
+import { isDatabaseEnabled } from '@/lib/db';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { upsertUser } from '@/lib/db/repository';
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -45,9 +47,9 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
     try {
-      await db.insert(users).values({
+      await upsertUser({
         clerkId: id,
-        email: email_addresses?.[0]?.email_address || '',
+        email: email_addresses?.[0]?.email_address || `${id}@users.noreply.clerk.dev`,
         name: `${first_name || ''} ${last_name || ''}`.trim() || null,
         profileImageUrl: image_url || null,
       });
@@ -63,6 +65,11 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name, image_url } = evt.data;
 
     try {
+      if (!isDatabaseEnabled) {
+        console.log(`✅ User ${id} updated (demo mode, not persisted)`);
+        return new Response('Webhook processed', { status: 200 });
+      }
+
       await db
         .update(users)
         .set({

@@ -1,10 +1,17 @@
-import { drizzle } from 'drizzle-orm/neon-http';
+import { drizzle, type NeonHttpDatabase } from 'drizzle-orm/neon-http';
 import { neon } from '@neondatabase/serverless';
 import * as schema from './schema';
+import { envValue } from "@/lib/env";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is not set');
-}
+export type Database = NeonHttpDatabase<typeof schema>;
 
-const sql = neon(process.env.DATABASE_URL);
-export const db = drizzle(sql, { schema });
+/**
+ * The database is optional. When DATABASE_URL is not configured the app
+ * runs in "demo mode": everything still works, designs are kept in an
+ * in-memory store for the lifetime of the server process.
+ */
+export const isDatabaseEnabled = !!envValue("DATABASE_URL");
+
+const sql = isDatabaseEnabled ? neon(envValue("DATABASE_URL") as string) : null;
+
+export const db = (sql ? drizzle(sql, { schema }) : null) as Database;
