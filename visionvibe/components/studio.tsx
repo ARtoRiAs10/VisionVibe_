@@ -84,6 +84,9 @@ export function Studio() {
         });
 
         const data = await res.json();
+        if (res.status === 401) {
+          throw new Error("Please sign in to generate and save designs.");
+        }
         if (!res.ok) {
           throw new Error(data?.error || "Generation failed");
         }
